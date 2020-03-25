@@ -106,7 +106,9 @@ def crear_favorito(user, movie_id):
 @web_site.route('/movies/list')
 def list_movies():
   lista = Movie.query.order_by(Movie.id.desc()).all()
-  
+  return render_template('listado_peliculas.html', 
+  peliculas = lista, 
+  rows = len(lista))
 
 
 web_site.run(host='0.0.0.0', port=8080)
