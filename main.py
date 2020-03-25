@@ -15,7 +15,7 @@ class User(db.Model):
   id = Column('id', Integer, primary_key = True, autoincrement= True)
   name = Column('name', String)
   last_name = Column('last_name', String)
-  user = Column('user', String)
+  username = Column('username', String)
   password = Column('password', String)
 
 
@@ -60,7 +60,27 @@ def handle_data():
     db.session.commit()
   return render_template('success_add_movie.html')
 
+@web_site.route('/user/create_a_use')
+def add_user():
+  return render_template("agregar_usuario.html")
 
+@web_site.route('/user/new', methods=['POST'])
+def handle_data_user():
+  if request.form:
+    vname = request.form.get('name',"no name")
+    vlastname = request.form['last_name']
+    vusername = request.form.get('username')
+    if not vusername:
+      return 500
+    vpassword = request.form['password']
+    newUser = User(name= vname, last_name= vlastname, username= vusername, password= vpassword)
+    db.session.add(newUser)
+    db.session.commit()
+  return render_template('success_add_user.html')
+
+@web_site.route('/user/list_name')
+def add_user():
+  return render_template("agregar_usuario.html")
 
 
 web_site.run(host='0.0.0.0', port=8080)

@@ -1,0 +1,26 @@
+<link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,600,700i,900|Open+Sans:600&display=swap"
+ rel="stylesheet">
+<title>Agregar Pelis</title>
+
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+ crossorigin="anonymous">
+
+<!-- Custom styles for this template -->
+<link href="/statics/style.css" rel="stylesheet">
+
+<form class="text-center border border-light p-5" action="{{ url_for('handle_data_user') }}" method="post">
+	<p class="h4 mb-4">Agrega un nuevo Usuario</p>
+	<p style="font-size: 12px; font-family: 'Montserrat'; font-weight: 500;">Agrega los campos que se solicitan a continuación</p>
+	</p>
+	<!-- Name -->
+	<input type="text" id="name" name="name" class="form-control mb-4" placeholder="Ingresa el nombre del usuario">
+    <!-- last_name -->
+    <input type="text" id="last_name" name="last_name" class="form-control mb-4" placeholder="Ingrese tu Apellido">
+    <!-- username -->
+    <input type="text" id="username" name="username" class="form-control mb-4" placeholder="Agrega el usuario">
+    <!-- password -->
+    <input type="password" id="password" name="password" class="form-control mb-4" placeholder="Agrega la clave">
+    <!-- Sign in button -->
+    <button class="btn btn-info btn-block" type="submit">Agregar usuario</button>
+</form>
