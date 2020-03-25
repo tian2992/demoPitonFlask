@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, url_for 
 from random import choice
+import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 web_site = Flask(__name__)
@@ -92,11 +93,10 @@ def list_users():
 
 # /user/<user>/new_favourite/<movie_id>
 
-@web_site.route('/user/<int:user>/new_favourite/<int:movie_id>')
+@web_site.route('/user/<int:user>/new_favourite/<int:movie_id>/')
 def crear_favorito(user, movie_id):
-  v_visto = request.form['v_visto']
-  v_fecha = reques.form['fecha']
-
+  v_visto = request.form.get('visto', True)
+  v_fecha = request.form.get('fecha', datetime.datetime.now())
   favorito = FavoriteMovie(user_id = user,movie_id = movie_id,watched = v_visto, date = v_fecha)
   db.session.add(favorito)
   db.session.commit()
@@ -111,4 +111,4 @@ def list_movies():
   rows = len(lista))
 
 
-web_site.run(host='0.0.0.0', port=8080)
+web_site.run(host='0.0.0.0', port=8080, debug=True)
