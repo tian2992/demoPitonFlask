@@ -101,7 +101,7 @@ def crear_favorito(user, movie_id):
   db.session.add(favorito)
   db.session.commit()
   
-  return render_template('<p>Registro agregado</p>')
+  return  render_template('success_add_fav.html')
 
 @web_site.route('/movies/list')
 def list_movies():
