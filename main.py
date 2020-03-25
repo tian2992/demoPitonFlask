@@ -7,7 +7,7 @@ web_site = Flask(__name__)
 web_site.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 db = SQLAlchemy(web_site)
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 class User(db.Model):
@@ -17,7 +17,8 @@ class User(db.Model):
   last_name = Column('last_name', String)
   username = Column('username', String)
   password = Column('password', String)
-
+  
+  favs = relationship("FavoriteMovie", back_populates="user")
 
 class Movie(db.Model): 
   __tablename__='tb_movies'
@@ -27,14 +28,20 @@ class Movie(db.Model):
   year = Column('year', Integer) 
   sinopsis = Column('sinopsis', String) 
 
+  favs = relationship("FavoriteMovie", back_populates="movie")
 
-# class FavouriteMovie(db.Model):
-#   __tablename__=  'tb_favorites'
-#   id = Column('id', Integer, primary_key = True, autoincrement= True)
-#   movie = relationship(Movie, back_populates="movies")
-#   user = relationship(User, back_populates='user') 
-#   watched = Column('watched', Integer) #true
-#   date = Column('date', String)
+
+
+class FavoriteMovie(db.Model):
+  __tablename__=  'tb_favorites'
+  id = Column('id', Integer, primary_key = True, autoincrement= True)
+  user_id = Column(Integer, ForeignKey(User.id))
+  movie_id = Column(Integer, ForeignKey(Movie.id))
+
+  movie = relationship(Movie, back_populates="favs")
+  user = relationship(User, back_populates='favs') 
+  watched = Column('watched', Integer) #true
+  date = Column('date', String)
 
 db.create_all()
 
@@ -60,7 +67,7 @@ def handle_data():
     db.session.commit()
   return render_template('success_add_movie.html')
 
-@web_site.route('/user/create_a_use')
+@web_site.route('/user/create_a_user')
 def add_user():
   return render_template("agregar_usuario.html")
 
@@ -79,8 +86,27 @@ def handle_data_user():
   return render_template('success_add_user.html')
 
 @web_site.route('/user/list_name')
-def add_user():
-  return render_template("agregar_usuario.html")
+def list_users():
+    listUser = User.query.order_by(User.id.desc()).all()
+    return render_template("listado_usuarios.html", users = listUser, rows = len(listUser))   
+
+# /user/<user>/new_favourite/<movie_id>
+
+@web_site.route('/user/<int:user>/new_favourite/<int:movie_id>')
+def crear_favorito(user, movie_id):
+  v_visto = request.form['v_visto']
+  v_fecha = reques.form['fecha']
+
+  favorito = FavoriteMovie(user_id = user,movie_id = movie_id,watched = v_visto, date = v_fecha)
+  db.session.add(favorito)
+  db.session.commit()
+  
+  return render_template('<p>Registro agregado</p>')
+
+@web_site.route('/movies/list')
+def list_movies():
+  lista = Movie.query.order_by(Movie.id.desc()).all()
+  
 
 
 web_site.run(host='0.0.0.0', port=8080)
